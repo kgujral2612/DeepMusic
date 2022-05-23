@@ -1,5 +1,5 @@
 
-from DataPreprocessing import *
+from DP import *
 
 notes = read_files()
 print(notes)

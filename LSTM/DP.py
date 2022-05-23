@@ -1,6 +1,6 @@
 #
-# Parsing a midi file
-# referece: https://towardsdatascience.com/how-to-generate-music-using-a-lstm-neural-network-in-keras-68786834d4c5
+# Data Preprocessing for LSTM
+# reference: https://towardsdatascience.com/how-to-generate-music-using-a-lstm-neural-network-in-keras-68786834d4c5
 #
 
 from music21 import *
@@ -57,3 +57,4 @@ def create_training_data(notes, n_vocab, sequence_length=100):
     network_input = network_input / n_vocab
     network_output = utils.to_categorical(network_output)
     return network_input, network_output
+
