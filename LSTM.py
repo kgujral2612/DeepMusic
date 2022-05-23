@@ -1,4 +1,4 @@
-from Helpers.MidiHelper import *
+from DataPreprocessing import *
 
 if __name__ == "__main__":
     a = [10, 20, 30]

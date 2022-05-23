@@ -1,5 +1,5 @@
 
-from Helpers.MidiHelper import *
+from DataPreprocessing import *
 
 notes = read_files()
 print(notes)
