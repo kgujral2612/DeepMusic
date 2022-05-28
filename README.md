@@ -18,6 +18,7 @@ pip install --upgrade pip
 pip install music21
 pip install numpy
 pip install tensorflow
+pip install pygame
 ```
 
 ## References
