@@ -6,6 +6,7 @@ from music21 import converter, instrument, note, chord
 import sys
 import numpy as np
 from imageio import imwrite
+import os
 
 
 def extractNote(element):
@@ -42,7 +43,7 @@ def get_notes(notes_to_parse):
     return {"start": start, "pitch": notes, "dur": durations}
 
 
-def midi2image(midi_path, max_repetitions=float("inf"), resolution=0.25, lowerBoundNote=21, upperBoundNote=127,
+def midi2image(midi_path, img_path, max_repetitions=float("inf"), resolution=0.25, lowerBoundNote=21, upperBoundNote=127,
                maxSongLength=100):
     mid = converter.parse(midi_path)
 
@@ -90,8 +91,7 @@ def midi2image(midi_path, max_repetitions=float("inf"), resolution=0.25, lowerBo
                             matrix[pitch - lowerBoundNote, j - index * maxSongLength] = 255
 
             if matrix.any():  # If matrix contains no notes (only zeros) don't save it
-                imwrite(midi_path.split("/")[-1].replace(".mid", f"_{instrument_name}_{index}.png"),
-                        matrix.astype(np.uint8))
+                imwrite(img_path + '\\' + midi_path.split("\\")[-1].replace(".mid", f"_{instrument_name}_{index}.png"), matrix.astype(np.uint8))
                 index += 1
             else:
                 break
