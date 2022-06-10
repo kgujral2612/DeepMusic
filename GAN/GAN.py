@@ -1,15 +1,16 @@
 from DP import *
 
 # this was used to convert midi files to images
-#path = "/Users/kaushambigujral/Desktop/Grad/ML/DeepMusic/GAN/midi_images"
-#convert_midi_to_img(path)
+# path = "/Users/kaushambigujral/Desktop/Grad/ML/DeepMusic/GAN/midi_images"
+# convert_midi_to_img(path)
 
 import os
 from PIL import Image
 from matplotlib import pyplot as plt
 import numpy as np
 from tensorflow.keras.models import Sequential, load_model
-from tensorflow.keras.layers import Dense, Reshape, Flatten, BatchNormalization, Conv2D, Conv2DTranspose, LeakyReLU, Dropout
+from tensorflow.keras.layers import Dense, Reshape, Flatten, BatchNormalization, Conv2D, Conv2DTranspose, LeakyReLU, \
+    Dropout
 from tensorflow.keras.datasets.mnist import load_data
 from tensorflow.keras.optimizers import Adam
 from numpy import zeros, ones, vstack
@@ -34,13 +35,15 @@ def access_images(img_list, path, length):
                 print(e)
                 pass
     return np.array(pixels), imgs
-    
+
+
 def show_image(pix_list):
     array = np.array(pix_list.reshape(106, 106), dtype=np.uint8)
     new_image = Image.fromarray(array)
     new_image.show()
 
-def define_discriminator(in_shape = (106, 106, 1)):
+
+def define_discriminator(in_shape=(106, 106, 1)):
     model = Sequential()
     model.add(Conv2D(64, (3, 3), strides=(2, 2), padding='same', input_shape=in_shape))
     model.add(LeakyReLU(alpha=0.2))
@@ -54,6 +57,7 @@ def define_discriminator(in_shape = (106, 106, 1)):
     opt = Adam(learning_rate=0.0002, beta_1=0.5)
     model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['accuracy'])
     return model
+
 
 def define_generator(latent_dim):
     model = Sequential()
@@ -69,6 +73,7 @@ def define_generator(latent_dim):
     model.add(Conv2D(1, (7, 7), padding='same', activation='sigmoid'))
     return model
 
+
 def define_gan(g_model, d_model):
     d_model.trainable = False
     model = Sequential()
@@ -78,16 +83,19 @@ def define_gan(g_model, d_model):
     model.compile(loss='binary_crossentropy', optimizer=opt)
     return model
 
+
 def generate_real_samples(dataset, n_samples):
     ix = randint(0, dataset.shape[0], n_samples)
     X = dataset[ix]
     y = ones((n_samples, 1))
     return X, y
 
+
 def generate_latent_points(latent_dim, n_samples):
     x_input = randn(latent_dim * n_samples)
     x_input = x_input.reshape(n_samples, latent_dim)
     return x_input
+
 
 def generate_fake_samples(g_model, latent_dim, n_samples):
     x_input = generate_latent_points(latent_dim, n_samples)
@@ -108,10 +116,11 @@ def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=51, n_batch
             X_gan = generate_latent_points(latent_dim, n_batch)
             y_gan = ones((n_batch, 1))
             g_loss = gan_model.train_on_batch(X_gan, y_gan)
-            print('>%d, %d/%d, d=%.3f, g=%.3f' % (i+1, j+1, bat_per_epo, d_loss, g_loss))
+            print('>%d, %d/%d, d=%.3f, g=%.3f' % (i + 1, j + 1, bat_per_epo, d_loss, g_loss))
             # if (i+1) % 10 == 0:
             #     summarize_performance(i, g_model, d_model, dataset, latent_dim)
             #     clear_output()
+
 
 if __name__ == '__main__':
     # path = "C:\\Users\\Adam\\Repos\\DeepMusic\\GAN\\images"
