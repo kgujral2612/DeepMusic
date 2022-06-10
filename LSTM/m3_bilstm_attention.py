@@ -1,0 +1,70 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Jun  8 22:28:46 2022
+
+@author: russe
+"""
+
+
+from music21 import *
+import glob
+import numpy as np
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from keras_self_attention import SeqSelfAttention
+
+from DP import *
+
+
+notes = read_files()
+#print(notes)
+
+n_vocab = len(set(notes))
+training_data = create_training_data(notes, n_vocab)
+network_input, network_output = training_data
+print(network_input.shape)
+print(network_output.shape)
+
+
+#build the model!
+model = keras.Sequential()
+
+model.add(tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(
+	256,
+	input_shape=(network_input.shape[1], network_input.shape[2]),
+	return_sequences=True
+)))
+model.add(SeqSelfAttention(attention_activation='sigmoid'))
+
+model.add(tf.keras.layers.Dropout(0.3))
+
+model.add(tf.keras.layers.LSTM(256))
+model.add(tf.keras.layers.Dense(256))
+model.add(tf.keras.layers.Dropout(0.3))
+model.add(tf.keras.layers.Dense(n_vocab))
+model.add(tf.keras.layers.Activation('softmax'))
+model.compile(loss='categorical_crossentropy', optimizer='rmsprop')
+
+filepath = "model_3_2nd_training-{epoch:02d}-{loss:.4f}-bigger.hdf5"
+
+checkpoint = tf.keras.callbacks.ModelCheckpoint(
+	filepath, monitor='loss', 
+	verbose=0,        
+	save_best_only=True,        
+	mode='min'
+) 
+callbacks_list = [checkpoint]
+
+
+model.fit(network_input, network_output, epochs=1, batch_size=64, callbacks=callbacks_list)
+
+# this line loads the previous weights, which fit the model above
+model.load_weights(r"C:\Users\russe\DeepMusic\LSTM\model_3_trained.hdf5")
+
+# now train the model
+model.fit(network_input, network_output, epochs=200, batch_size=64, callbacks=callbacks_list)
+
+
+
+
