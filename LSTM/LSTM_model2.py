@@ -25,7 +25,7 @@ model.add(tf.keras.layers.LSTM(
 	return_sequences=True
 ))
 model.add(tf.keras.layers.Dropout(0.3))
-model.add(tf.keras.layers.Bidirectional(  tf.keras.layers.LSTM(512, return_sequences=True)) )
+model.add(tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(512, return_sequences=True)))
 model.add(tf.keras.layers.Dropout(0.3))
 model.add(tf.keras.layers.LSTM(256))
 model.add(tf.keras.layers.Dense(256))

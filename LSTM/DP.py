@@ -6,7 +6,7 @@
 from music21 import *
 import glob
 import numpy as np
-from tensorflow.keras import utils
+from keras import utils
 
 
 # keeping this for learning purposes
@@ -20,7 +20,7 @@ def read_file(path):
 
 def read_files():
     notes = []
-    for path in glob.glob("piano_songs/*.mid"):
+    for path in glob.glob("../piano_songs/*.mid"):
         midi_file = converter.parse(path)
         notes_to_parse = None
         parts = instrument.partitionByInstrument(midi_file)

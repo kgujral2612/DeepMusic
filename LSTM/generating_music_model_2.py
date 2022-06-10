@@ -82,4 +82,4 @@ for pattern in prediction_output:
     offset += 0.5
 
 midi_stream = stream.Stream(output_notes)
-midi_stream.write('midi', fp='predicted_model_2_output.mid')
+midi_stream.write('midi', fp='compositions/predicted_model_2_output.mid')

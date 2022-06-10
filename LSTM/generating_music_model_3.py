@@ -24,15 +24,16 @@ print(network_output.shape)
 
 model = keras.Sequential()
 
-model.add(tf.keras.layers.LSTM(
-    256,
-    input_shape=(network_input.shape[1], network_input.shape[2]),
-    return_sequences=True
-))
-model.add(tf.keras.layers.Dropout(0.3))
-model.add(tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(512, return_sequences=True)))
+model.add(tf.keras.layers.Bidirectional(
+    tf.keras.layers.LSTM(
+        256,
+        input_shape=(network_input.shape[1], network_input.shape[2]),
+        return_sequences=True
+    )))
 model.add(SeqSelfAttention(attention_activation='sigmoid'))
+
 model.add(tf.keras.layers.Dropout(0.3))
+
 model.add(tf.keras.layers.LSTM(256))
 model.add(tf.keras.layers.Dense(256))
 model.add(tf.keras.layers.Dropout(0.3))
@@ -41,7 +42,7 @@ model.add(tf.keras.layers.Activation('softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='rmsprop')
 
 # Load the weights to each node
-model.load_weights('model_3_2nd_training-195-0.9616-bigger.hdf5')
+model.load_weights('model_3_trained.hdf5')
 
 start = numpy.random.randint(0, len(network_input) - 1)
 int_to_note = dict((number, note) for number, note in enumerate(pitchnames))
@@ -85,4 +86,4 @@ for pattern in prediction_output:
     offset += 0.5
 
 midi_stream = stream.Stream(output_notes)
-midi_stream.write('midi', fp='predicted_model_3_output.mid')
+midi_stream.write('midi', fp='compositions/predicted_model_3_output.mid')
